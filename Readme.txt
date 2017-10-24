@@ -28,7 +28,7 @@ process id      subprocess id       parton process
 4               1                   q qbar -> g g
 4               2                   g g -> q qbar
 5               not needed          g g -> g g
-As it can be seen from the table, the process ids group similar processes and the subprocess ids are used to distinguish minor differences among them.
+As it can be seen from the table, the process ids group similar processes and the subprocess ids are used to distinguish minor differences among them. The subprocess ids which are 'not needed' may just be set to 1 or any other integer value.
 
 INSTALLATION
 To work properly, Sherpa needs to be set up with '--enable-pyext' in the ./configure prompt and the files 'eikonal.py' and 'interface.py' need to be placed in the ME2-Python folder created by Sherpa: /path-to-sherpa/share/SHERPA-MC/Examples/API/ME2-Python/, where 'path-to-sherpa denotes the path to which Sherpa was installed.
