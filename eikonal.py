@@ -26,7 +26,6 @@ def calcTrace (p_1, p_2, p_3, p_4, p_s):
     N_C = 3.
     C_F = 4./3.
     C_A = 3.
-    alpha_s = 0.118
     hard_p = np.array([p_1, p_2, p_3, p_4])
     
     s = minkprod(np.add(p_1, p_2), np.add(p_1, p_2))
@@ -64,37 +63,43 @@ def calcTrace (p_1, p_2, p_3, p_4, p_s):
             
             Gamma += minkprod(hard_p[i], hard_p[j])/(minkprod(hard_p[i], p_s)*minkprod(hard_p[j], p_s))*C
     
-    trace = np.trace(np.matmul(H,np.matmul(np.conj(Gamma.transpose()),np.matmul(M, Gamma)))) 
+    trace = np.trace(np.matmul(np.matmul(H, M), Gamma))
+    #trace = np.trace(np.matmul(H,np.matmul(np.conj(Gamma.transpose()),np.matmul(M, Gamma)))) 
     if trace.imag < eps:
         trace = trace.real
     
     return trace;
 
 alpha_s = 0.118
-E = 50.0
+E = 7.e3
 phi_43 = m.pi * 3./2.
 phi_44 = m.pi * 5./2.
 phi_H = m.pi/10.
 phi_s = m.pi/7.
 R_s = np.array([])
 lambda_s = np.array([])
-maxrange = 2
+maxrange = 9
 
 writeRunCard(E)
 
-for i in range (0,maxrange):
-    lambda_s = np.append(lambda_s, pow(10, -i))
+for i in range (0, maxrange):
+    lambda_s = np.append(lambda_s, 1.0*pow(10, -i))
     k_s = 2.*E*lambda_s[i]
     p_1 = [E,0.,0.,E]
     p_2 = [E,0.,0.,-E]    
     p_3 = [E,E*m.cos(phi_43+phi_H),E*m.sin(phi_43+phi_H),0]
     p_4 = [E,E*m.cos(phi_44+phi_H),E*m.sin(phi_44+phi_H),0]
     p_s = [k_s,k_s*m.cos(phi_s),k_s*m.sin(phi_s),0.]
-
-    MatEl = sh.calcMatEl(p_1, p_2, p_3, p_4, p_s)
-    trace = calcTrace(p_1, p_2, p_3, p_4, p_s)
-    R_s = np.append(R_s, [alpha_s/m.pi * trace/MatEl])
     
+    MatEl = sh.calcMatEl(p_1, p_2, p_3, p_4, p_s)
+    p_1 = [x*1e9 for x in p_1]
+    p_2 = [x*1e9 for x in p_2]
+    p_3 = [x*1e9 for x in p_3]
+    p_4 = [x*1e9 for x in p_4]
+    p_s = [x*1e9 for x in p_s]
+    trace = calcTrace(p_1, p_2, p_3, p_4, p_s)
+    R_s = np.append(R_s, [alpha_s/m.pi* trace/MatEl])
+        
 print "lambda_s\tR_s"
 for i in range(0,maxrange):
     print lambda_s[i], "\t\t", R_s[i]
