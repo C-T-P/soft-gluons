@@ -27,6 +27,7 @@ def calcTrace (p_1, p_2, p_3, p_4, p_s):
     C_F = 4./3.
     C_A = 3.
     alpha_s = 0.118
+    hard_p = np.array([p_1, p_2, p_3, p_4])
     
     s = minkprod(np.add(p_1, p_2), np.add(p_1, p_2))
     t = minkprod(np.subtract(p_1, p_3), np.subtract(p_1, p_3))
@@ -41,12 +42,27 @@ def calcTrace (p_1, p_2, p_3, p_4, p_s):
                 [C_F/pow(N_C,2)*chi_2, chi_3]])
     M = np.array([[pow(N_C,2), 0.],
                 [0., 1./4.*(pow(N_C,2)-1)]])
-        
-    Gamma = (minkprod(p_1, p_2)/(minkprod(p_1, p_s)*minkprod(p_2, p_s)) + minkprod(p_3, p_4)/(minkprod(p_3, p_s)*minkprod(p_4, p_s)))*np.array([[C_F, -C_F/(2.*N_C)+1./4.*(1.-1./pow(N_C,2))],[0., -1./(2.*N_C)]]) + (minkprod(p_1, p_3)/(minkprod(p_1, p_s)*minkprod(p_3, p_s)) + minkprod(p_2, p_4)/(minkprod(p_2, p_s)*minkprod(p_4, p_s))) * np.array([[0., 1./4.*(1.-1./pow(N_C,2))],[1., -1./N_C]]) + (minkprod(p_1, p_4)/(minkprod(p_1, p_s)*minkprod(p_4, p_s)) + minkprod(p_2, p_3)/(minkprod(p_2, p_s)*minkprod(p_3, p_s)) )*np.array([[0., C_F/(2.*N_C)],[1., -1./(2.*N_C)+C_F]])
-        
-    #T1 = np.array([[1.0, 1./N_C],[0., 2.]])
-    #T2 = np.array([[1.0, -1./(2*N_C)],[0., 1./2.]])
-    #Gamma = np.matmul(np.matmul(T1, Gamma), T2)
+    
+    C_12 = np.array([[C_F, -C_F/(2.*N_C)+1./4.*(1.-1./pow(N_C,2))],
+                     [0., -1./(2.*N_C)]])
+    C_13 = np.array([[0., 1./4.*(1.-1./pow(N_C,2))],
+                     [1., -1./N_C]])
+    C_14 = np.array([[0., C_F/(2.*N_C)],
+                     [1., -1./(2.*N_C)+C_F]])
+
+    Gamma = np.zeros((2,2))
+    for i in range(0,4):
+        for j in range(i+1, 4):
+            if (i == 0 and j == 1) or (i == 2 and j == 3):
+                C = C_12
+            elif (i == 0 and j == 2) or (i == 1 and j == 3):
+                C = C_13
+            elif (i == 0 and j == 3) or (i == 1 and j == 2):
+                C = C_14
+            else:
+                C = np.zeros((2,2))
+            
+            Gamma += minkprod(hard_p[i], hard_p[j])/(minkprod(hard_p[i], p_s)*minkprod(hard_p[j], p_s))*C
     
     trace = np.trace(np.matmul(H,np.matmul(np.conj(Gamma.transpose()),np.matmul(M, Gamma)))) 
     if trace.imag < eps:
@@ -78,8 +94,6 @@ for i in range (0,maxrange):
     MatEl = sh.calcMatEl(p_1, p_2, p_3, p_4, p_s)
     trace = calcTrace(p_1, p_2, p_3, p_4, p_s)
     R_s = np.append(R_s, [alpha_s/m.pi * trace/MatEl])
-    
-    print lambda_s[i], k_s
     
 print "lambda_s\tR_s"
 for i in range(0,maxrange):
