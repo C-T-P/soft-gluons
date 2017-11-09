@@ -174,9 +174,9 @@ def calcTrace (process, p_1, p_2, p_3, p_4, p_s):
                 [0., C_F*(pow(N_C,2)-4),0.],
                 [0.,0.,C_F*pow(N_C,2)]])
         
-        C_12 = np.array([[0., 0., -2j],[0., 1.j*N_C/2., -1.j*N_C/2.],[-1.j, -1.j*(pow(N_C,2)-4)/(2.*N_C), -1.j*N_C/2.]])
-        C_13 = np.array([[2.*(pow(N_C, 2)-1)/N_C, 0., 0.],[0., -2./N_C, 0.],[0., 0., -2./N_C]])
-        C_14 = np.array([[0., 0., -2.j],[0., -N_C/2., -1.j*N_C/2.],[-1.j, -1.j*(pow(N_C, 2)-4)/(2.*N_C), -1.j*N_C/2.]])
+        C_12 = np.array([[0., 0., -1./2.],[0., N_C/4., -N_C/4.],[-1., -(pow(N_C,2)-4)/(4.*N_C), N_C/4.]])
+        C_13 = np.array([[(pow(N_C, 2)-1)/(2.*N_C), 0., 0.],[0., -1./(2.*N_C), 0.],[0., 0., -1./(2.*N_C)]])
+        C_14 = np.array([[0., 0., 1./2.],[0., N_C/4., N_C/4.],[1., (pow(N_C, 2)-4)/(4.*N_C), N_C/4.]])
         C_24 = np.array([[N_C, 0., 0.],[0., N_C/2., 0.],[0., 0., N_C/2.]])
         C_34 = C_12
         C_23 = C_14
@@ -202,6 +202,13 @@ def calcTrace (process, p_1, p_2, p_3, p_4, p_s):
         M = np.array([[C_F*2*pow(N_C,2),0.,0.],
                 [0., C_F*(pow(N_C,2)-4),0.],
                 [0.,0.,C_F*pow(N_C,2)]])
+        
+        C_12 = np.array([[(pow(N_C,2)-1)/(2.*N_C), 0., 0.],[0., -1./(2.*N_C), 0.], [0., 0., -1./(2.*N_C)]])
+        C_13 = np.array([[0., 0., 1./2.],[0., -N_C/4., N_C/4.],[1., (pow(N_C,2)-4)/(4.*N_C), -N_C/4]])
+        C_14 = np.array([[0., 0., 1./2.],[0., N_C/4., N_C/4.],[1., (pow(N_C,2)-4)/(4.*N_C), N_C/4.]])
+        C_34 = np.array([[N_C, 0., 0.,],[0., N_C/2., 0.],[0., 0., N_C/2.]])
+        C_24 = C_13
+        C_23 = C_14
         Gamma = np.zeros((3,3))
         
     # gg -> gg
@@ -245,41 +252,49 @@ def calcTrace (process, p_1, p_2, p_3, p_4, p_s):
     
     return trace;
 
+
+# Definition of constants
 alpha_s = 0.118
-E = 1.e3
 phi_43 = m.pi * 3./2.
 phi_44 = m.pi * 5./2.
 phi_H = m.pi/10.
 phi_s = m.pi/7.
-R_s = np.array([])
+R_s = np.zeros((1,11)) # set first to number of phase space points and second to number of energies
 lambda_s = np.array([1.e-6, 5.e-6, 1.e-5, 5.e-5, 1.e-4, 5.e-4, 1.e-3, 5e-3, 1.e-2, 5.e-2, 1.e-1,])
+E = 1.e3
 
+# Process specification
 process = [3,1]
 
 plot_title = writeRunCard(process, E)
     
-for l_s in lambda_s:
-    k_s = 2.*E*l_s
-    p_1 = [E,0.,0.,E]
-    p_2 = [E,0.,0.,-E]    
-    p_3 = [E,E*m.cos(phi_43+phi_H),E*m.sin(phi_43+phi_H),0]
-    p_4 = [E,E*m.cos(phi_44+phi_H),E*m.sin(phi_44+phi_H),0]
-    p_s = [k_s,k_s*m.cos(phi_s),k_s*m.sin(phi_s),0.]
-    
-    MatEl = sh.calcMatEl(p_1, p_2, p_3, p_4, p_s)
-    trace = calcTrace(process, p_1, p_2, p_3, p_4, p_s)
-    R_s = np.append(R_s, [alpha_s/m.pi*trace/MatEl])
+for K in range(0,1):
+    i = 0
+    for l_s in lambda_s:
+        k_s = 2.*E*l_s
+        p_1 = [E,0.,0.,E]
+        p_2 = [E,0.,0.,-E]    
+        p_3 = [E,E*m.cos(phi_43+K*phi_H),E*m.sin(phi_43+K*phi_H),0]
+        p_4 = [E,E*m.cos(phi_44+K*phi_H),E*m.sin(phi_44+K*phi_H),0]
+        p_s = [k_s,k_s*m.cos(phi_s),k_s*m.sin(phi_s),0.]
         
-print "lambda_s\tR_s"
-for i in range(0, lambda_s.size):
-    print lambda_s[i], "\t\t", R_s[i]
+        MatEl = sh.calcMatEl(process, p_1, p_2, p_3, p_4, p_s)
+        trace = calcTrace(process, p_1, p_2, p_3, p_4, p_s)
+        R_s[K,i] = alpha_s/m.pi*trace/MatEl
+        i = i+1
+        
+#print "lambda_s\tR_s"
+#for i in range(0, lambda_s.size):
+    #print lambda_s[i], "\t\t", R_s[i]
         
 #Plotting
 plt.title(plot_title + '$\mathrm{~at~} E = %.1f \mathrm{~GeV}$' %(E))
 plt.xlabel('$\lambda_s$')
 plt.ylabel('$R_s$')
 plt.xscale('log')
-plt.plot(lambda_s, R_s)
+for K in range(0,1):
+    plt.plot(lambda_s, R_s[K], label="N = %i" %(K))
+plt.legend()    
 plt.show()
 
     
