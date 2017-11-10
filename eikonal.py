@@ -56,14 +56,14 @@ def writeRunCard(process, E):
             pid_2 = -1
             pid_3 = 21 
             pid_4 = 21
-            title = "$q\\bar{q} \\to gg(g)"
+            title = "$q\\bar{q} \\to gg(g)$"
             
         elif process[1] == 2:
             pid_1 = 21
             pid_2 = 21
             pid_3 = 1
             pid_4 = -1
-            title = "$qq \\to q\\bar{q}(g)"
+            title = "$qq \\to q\\bar{q}(g)$"
             
     elif process[0] == 5:
         pid_1 = 21
@@ -152,7 +152,7 @@ def calcTrace (process, p_1, p_2, p_3, p_4, p_s):
         M = np.array([[pow(N_C,2), 0.],
                     [0., 1./4.*(pow(N_C,2)-1)]])
         
-        C_12 = np.array([[0., (pow(N_C,2)-1)/(4*pow(N_C,2))],[1., -1./N]])
+        C_12 = np.array([[0., (pow(N_C,2)-1)/(4*pow(N_C,2))],[1., -1./N_C]])
         C_13 = np.array([[(pow(N_C,2)-1)/(2.*N_C), 0.],[0., -1./(2.*N_C)]])
         C_14 = np.array([[0., (pow(N_C,2)-1)/(4.*pow(N_C,2))],[1., (pow(N_C,2)-2)/(2.*N_C)]])
         C_34 = C_12
@@ -259,16 +259,23 @@ phi_43 = m.pi * 3./2.
 phi_44 = m.pi * 5./2.
 phi_H = m.pi/10.
 phi_s = m.pi/7.
-R_s = np.zeros((1,11)) # set first to number of phase space points and second to number of energies
+R_s = np.zeros(11) # set first to number of phase space points and second to number of energies
 lambda_s = np.array([1.e-6, 5.e-6, 1.e-5, 5.e-5, 1.e-4, 5.e-4, 1.e-3, 5e-3, 1.e-2, 5.e-2, 1.e-1,])
 E = 1.e3
+K = 1
 
 # Process specification
 process = [1,1]
 
 plot_title = writeRunCard(process, E)
-    
-for K in range(0,1):
+
+#Plotting
+plt.title(plot_title + '$\mathrm{~at~} E = %.1f \mathrm{~GeV}$' %(E))
+plt.xlabel('$\lambda_s$')
+plt.ylabel('$R_s$')
+plt.xscale('log')
+
+for K in range(0,2):    
     i = 0
     for l_s in lambda_s:
         k_s = 2.*E*l_s
@@ -280,21 +287,16 @@ for K in range(0,1):
         
         MatEl = sh.calcMatEl(process, p_1, p_2, p_3, p_4, p_s)
         trace = calcTrace(process, p_1, p_2, p_3, p_4, p_s)
-        R_s[K,i] = alpha_s/m.pi*trace/MatEl
-        i = i+1
+        R_s[i] = alpha_s/m.pi*trace/MatEl
+        i += 1
         
-#print "lambda_s\tR_s"
-#for i in range(0, lambda_s.size):
-    #print lambda_s[i], "\t\t", R_s[i]
+    plt.plot(lambda_s, R_s, label="N = %i" %(K))    
+    
+print "lambda_s\tR_s"
+for i in range(0, lambda_s.size):
+    print lambda_s[i], "\t\t", R_s[i]
         
-#Plotting
-plt.title(plot_title + '$\mathrm{~at~} E = %.1f \mathrm{~GeV}$' %(E))
-plt.xlabel('$\lambda_s$')
-plt.ylabel('$R_s$')
-plt.xscale('log')
-for K in range(0,1):
-    plt.plot(lambda_s, R_s[K], label="N = %i" %(K))
-plt.legend()    
+plt.legend(loc=8)    
 plt.show()
 
     
