@@ -122,12 +122,12 @@ def calcTrace (process, p_1, p_2, p_3, p_4, p_s):
         M = np.array([[pow(N_C,2), 0.],
                     [0., 1./4.*(pow(N_C,2)-1)]])
     
-        C_12 = np.array([[C_F, -C_F/(2.*N_C)+1./4.*(1.-1./pow(N_C,2))],
+        C_12 = np.array([[0., (pow(N_C,2)-1)/(4*pow(N_C,2))],
+                        [1., (pow(N_C,2)-2)/(2.*N_C)]])
+        C_13 = np.array([[(pow(N_C,2)-1)/(2.*N_C), 0.],
                         [0., -1./(2.*N_C)]])
-        C_13 = np.array([[0., 1./4.*(1.-1./pow(N_C,2))],
+        C_14 = np.array([[0., (pow(N_C,2)-1)/(4.*pow(N_C,2))],
                         [1., -1./N_C]])
-        C_14 = np.array([[0., C_F/(2.*N_C)],
-                        [1., -1./(2.*N_C)+C_F]])
         C_34 = C_12
         C_24 = C_13
         C_23 = C_14
@@ -152,9 +152,9 @@ def calcTrace (process, p_1, p_2, p_3, p_4, p_s):
         M = np.array([[pow(N_C,2), 0.],
                     [0., 1./4.*(pow(N_C,2)-1)]])
         
-        C_12 = np.array([[0., (pow(N_C,2)-1)/pow(N_C,2)],[4., -4./n]])
-        C_13 = np.array([[2.*(pow(N_C,2)-1)/N_C, -(N_C+1)/pow(N_C,2)],[0., -2./N_C]])
-        C_14 = np.array([[0., (pow(N_C,2)-1)/pow(N_C,2)],[4., 2.*(pow(N_C,2)-2)/N_C]])
+        C_12 = np.array([[0., (pow(N_C,2)-1)/(4*pow(N_C,2))],[1., -1./N]])
+        C_13 = np.array([[(pow(N_C,2)-1)/(2.*N_C), 0.],[0., -1./(2.*N_C)]])
+        C_14 = np.array([[0., (pow(N_C,2)-1)/(4.*pow(N_C,2))],[1., (pow(N_C,2)-2)/(2.*N_C)]])
         C_34 = C_12
         C_24 = C_13
         C_23 = C_14
@@ -264,7 +264,7 @@ lambda_s = np.array([1.e-6, 5.e-6, 1.e-5, 5.e-5, 1.e-4, 5.e-4, 1.e-3, 5e-3, 1.e-
 E = 1.e3
 
 # Process specification
-process = [3,1]
+process = [1,1]
 
 plot_title = writeRunCard(process, E)
     
