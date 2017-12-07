@@ -300,7 +300,11 @@ E = 1.e3
 K = 1
 
 # Process specification
+<<<<<<< HEAD
 process = [5,1]
+=======
+process = [5]
+>>>>>>> 42fe11f7a2d58b95f7ab25ee0ff4f8ef2ad4f651
 
 plot_title = writeRunCard(process, E)
 
