@@ -35,3 +35,6 @@ To work properly, Sherpa needs to be set up with '--enable-pyext' in the ./confi
 
 AUTHORS
 Jose Llanes Jurado, Christian Tobias Preuss
+
+CONTACT
+christian.preuss@theorie.physik.uni-goettingen.de
