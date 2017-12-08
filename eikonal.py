@@ -247,7 +247,7 @@ def calcTrace (process, p_1, p_2, p_3, p_4, p_s):
             [0, 0, 1./3., 2./3., 2.]
             ])
         C_13 = np.array([
-            [3., 0, 0, 0, -4.],
+            [3., 0, 0, 0, 0],
             [0, 3./2., 0, 0, 0],
             [0, 0, 3./2., 0, 0],
             [0, 0, 0, 0, 0],
@@ -294,43 +294,47 @@ phi_43 = m.pi * 3./2.
 phi_44 = m.pi * 5./2.
 phi_H = m.pi/10.
 phi_s = m.pi/7.
-R_s = np.zeros(11)
-lambda_s = np.array([1.e-6, 5.e-6, 1.e-5, 5.e-5, 1.e-4, 5.e-4, 1.e-3, 5e-3, 1.e-2, 5.e-2, 1.e-1,])
-E = 1.e3
-K = 1
 
 # Process specification
 process = [5,1]
+E = 7.e3
+K_sup = 2
+lambda_s = np.array([1.e-6, 5.e-6, 1.e-5, 5.e-5, 1.e-4, 5.e-4, 1.e-3, 5e-3, 1.e-2, 5.e-2, 1.e-1,])
+R_s = np.zeros((K_sup,lambda_s.size))
 
+# Plot setup
 plot_title = writeRunCard(process, E)
-
-i = 0
-for l_s in lambda_s:
-    k_s = 2.*E*l_s
-    p_1 = [E,0.,0.,E]
-    p_2 = [E,0.,0.,-E]    
-    p_3 = [E,E*m.cos(phi_43+K*phi_H),E*m.sin(phi_43+K*phi_H),0]
-    p_4 = [E,E*m.cos(phi_44+K*phi_H),E*m.sin(phi_44+K*phi_H),0]
-    p_s = [k_s,k_s*m.cos(phi_s),k_s*m.sin(phi_s),0.]
-    
-    MatEl = sh.calcMatEl(process, p_1, p_2, p_3, p_4, p_s)
-    trace = calcTrace(process, p_1, p_2, p_3, p_4, p_s)
-    R_s[i] = alpha_s/m.pi*trace/MatEl
-    i += 1
-    
-plt.plot(lambda_s, R_s, label="N = %i" %(K))    
-    
-print "lambda_s\tR_s"
-for i in range(0, lambda_s.size):
-    print lambda_s[i], "\t\t", R_s[i]
-        
-#Plotting
 plt.title(plot_title + '$\mathrm{~at~} E = %.1f \mathrm{~GeV}$' %(E))
 plt.xlabel('$\lambda_s$')
 plt.ylabel('$R_s$')
-plt.xscale('log')
-plt.legend(loc=8)    
+plt.xscale('log') 
+
+for K in range(0,K_sup):
+    i = 0
+    for l_s in lambda_s:
+        k_s = 2.*E*l_s
+        p_1 = [E,0.,0.,E]
+        p_2 = [E,0.,0.,-E]    
+        p_3 = [E,E*m.cos(phi_43+K*phi_H),E*m.sin(phi_43+K*phi_H),0]
+        p_4 = [E,E*m.cos(phi_44+K*phi_H),E*m.sin(phi_44+K*phi_H),0]
+        p_s = [k_s,k_s*m.cos(phi_s),k_s*m.sin(phi_s),0.]
+        
+        MatEl = sh.calcMatEl(process, p_1, p_2, p_3, p_4, p_s)
+        trace = calcTrace(process, p_1, p_2, p_3, p_4, p_s)
+        R_s[K,i] = alpha_s/m.pi*trace/MatEl
+        i = i+1
+        
+    plt.plot(lambda_s, R_s[K], label="N = %i" %(K))    
+
+plt.legend(loc=8)   
 plt.show()
+    
+#print "lambda_s\tR_s"
+#for i in range(0, lambda_s.size):
+    #print lambda_s[i], "\t\t", R_s[i]
+        
+
+
 
     
     
