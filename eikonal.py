@@ -297,10 +297,10 @@ phi_H = m.pi/10.
 phi_s = m.pi/7.
 
 # Process specification
-process = [5,1]
+process = [1,1]
 E = 7.e3
-K_sup = 2
-lambda_s = np.array([1.e-6, 5.e-6, 1.e-5, 5.e-5, 1.e-4, 5.e-4, 1.e-3, 5e-3, 1.e-2, 5.e-2, 1.e-1,])
+K_sup = 9
+lambda_s = np.array([1e-6, 1e-1]) #np.array([1.e-6, 5.e-6, 1.e-5, 5.e-5, 1.e-4, 5.e-4, 1.e-3, 5e-3, 1.e-2, 5.e-2, 1.e-1,])
 R_s = np.zeros((K_sup,lambda_s.size))
 
 # Plot setup
@@ -327,7 +327,7 @@ for K in range(0,K_sup):
         
     plt.plot(lambda_s, R_s[K], label="N = %i" %(K))    
 
-plt.legend(loc=8)   
+plt.legend(bbox_to_anchor=(1.01, 1), loc='upper left')   
 plt.show()
     
 #print "lambda_s\tR_s"
