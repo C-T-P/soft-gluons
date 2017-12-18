@@ -30,6 +30,7 @@ def calcMatEl (process, K, lambda_s, E):
             pid_2 = -1
             pid_3 =  2
             pid_4 = -1
+        title = "$q\\bar{q} \\to q\\bar{q}(g)$"
             
     elif process[0] == 2:
         if process[1] == 1:
@@ -43,12 +44,15 @@ def calcMatEl (process, K, lambda_s, E):
             pid_2 = 2
             pid_3 = 1
             pid_4 = 2
+        title = "$qq \\to qq(g)$"
         
     elif process[0] == 3:
         pid_1 = 1
         pid_2 = 21
         pid_3 = 1
         pid_4 = 21
+        
+        title = "$qg \\to qg(g)$"
             
     elif process[0] == 4:
         if process[1] == 1:
@@ -56,30 +60,44 @@ def calcMatEl (process, K, lambda_s, E):
             pid_2 = -1
             pid_3 = 21 
             pid_4 = 21
+            title = "$q\\bar{q} \\to gg(g)$"
             
         elif process[1] == 2:
             pid_1 = 21
             pid_2 = 21
             pid_3 = 1
             pid_4 = -1
+            title = "$gg \\to q\\bar{q}(g)$"
             
     elif process[0] == 5:
         pid_1 = 21
         pid_2 = 21
         pid_3 = 21 
         pid_4 = 21
+        title = "$gg \\to gg(g)$"
         
     else:
-        pid_1 = 0
-        pid_2 = 0
-        pid_3 = 0
-        pid_4 = 0
+        title = "not defined"   
+        
+    # Debugging only
+    #with open('Run.dat', 'w') as f:
+        #f.write("(run){\n\tEVENTS %d\n\tSHERPA_LDADD SherpaMain;\n\tSCALES VAR{sqr(91.18)}\n}(run)" % (0))
+        #f.write("\n\n(beam){\n\tBEAM_1  %d; BEAM_ENERGY_1  %.1f;\n\tBEAM_2  %d; BEAM_ENERGY_2  %.1f;\n}(beam)" % (pid_1, E, pid_2, E))
+        #f.write("\n\n(isr){\n\tPDF_LIBRARY None;\n}(isr)")
+        #f.write("\n\n(processes){\n\tProcess %d %d -> %d %d;\n\tME_Generator Amegic;\n\tOrder (2,0);\n\tEnd process;\n}(processes)" % (pid_1, pid_2, pid_3, pid_4))    
+    
+    # 2 -> 2 + 1 Process
+    with open('Run.dat', 'w') as f:
+        f.write("(run){\n\tEVENTS %d\n\tSHERPA_LDADD SherpaMain;\n\tSCALES VAR{sqr(91.18)}\n}(run)" % (0))
+        f.write("\n\n(beam){\n\tBEAM_1  %d; BEAM_ENERGY_1  %.1f;\n\tBEAM_2  %d; BEAM_ENERGY_2  %.1f;\n}(beam)" % (pid_1, E, pid_2, E))
+        f.write("\n\n(isr){\n\tPDF_LIBRARY None;\n}(isr)")
+        f.write("\n\n(processes){\n\tProcess %d %d -> %d %d %d;\n\tME_Generator Amegic;\n\tOrder (3,0);\n\tEnd process;\n}(processes)" % (pid_1, pid_2, pid_3, pid_4, 21))
     
     try:
         Generator.InitializeTheRun(len(sys.argv),sys.argv)
         Process=Sherpa.MEProcess(Generator)
 
-        # Incoming flavors must be added first!
+        # Incoming flavours must be added first!
         Process.AddInFlav(pid_1);
         Process.AddInFlav(pid_2);
         Process.AddOutFlav(pid_3);
@@ -109,7 +127,8 @@ def calcMatEl (process, K, lambda_s, E):
                                     p_2,
                                     p_3,
                                     p_4,
-                                    p_s])
+                                    p_s
+                                    ])
                 MatEl[i,j] = Process.CSMatrixElement()
                 j = j+1
         
@@ -118,4 +137,4 @@ def calcMatEl (process, K, lambda_s, E):
         print exc
         exit(1)
     
-    return MatEl;
+    return title, MatEl;
