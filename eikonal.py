@@ -288,7 +288,6 @@ def calcTrace (process, p_1, p_2, p_3, p_4, p_s):
     
     return trace;
 
-
 # Definition of constants
 alpha_s = 0.118
 phi_43 = m.pi * 3./2.
@@ -297,11 +296,15 @@ phi_H = m.pi/10.
 phi_s = m.pi/7.
 
 # Process specification
-process = [1,1]
+process = [5,1]
 E = 7.e3
-K_sup = 9
-lambda_s = np.array([1e-6, 1e-1]) #np.array([1.e-6, 5.e-6, 1.e-5, 5.e-5, 1.e-4, 5.e-4, 1.e-3, 5e-3, 1.e-2, 5.e-2, 1.e-1,])
-R_s = np.zeros((K_sup,lambda_s.size))
+K = np.array([0., 1., 2., 3., 4., 5., 6., 7., 8., 9., 10.])
+lambda_s = np.array([1.e-6, 5.e-6, 1.e-5, 5.e-5, 1.e-4, 5.e-4, 1.e-3, 5e-3, 1.e-2, 5.e-2, 1.e-1,]) #np.array([1e-6, 1e-1])
+R_s = np.zeros((K.size,lambda_s.size))
+
+# calculate Matrix Elements
+MatEl = sh.calcMatEl(process, K, lambda_s, E)
+#print MatEl
 
 # Plot setup
 plot_title = writeRunCard(process, E)
@@ -310,22 +313,20 @@ plt.xlabel('$\lambda_s$')
 plt.ylabel('$R_s$')
 plt.xscale('log') 
 
-for K in range(0,K_sup):
-    i = 0
-    for l_s in lambda_s:
-        k_s = 2.*E*l_s
+for i in range(0, K.size):
+    N = K[i]
+    for j in range(0, lambda_s.size):
+        k_s = 2.*E*lambda_s[j]
         p_1 = [E,0.,0.,E]
         p_2 = [E,0.,0.,-E]    
-        p_3 = [E,E*m.cos(phi_43+K*phi_H),E*m.sin(phi_43+K*phi_H),0]
-        p_4 = [E,E*m.cos(phi_44+K*phi_H),E*m.sin(phi_44+K*phi_H),0]
+        p_3 = [E,E*m.cos(phi_43+N*phi_H),E*m.sin(phi_43+N*phi_H),0]
+        p_4 = [E,E*m.cos(phi_44+N*phi_H),E*m.sin(phi_44+N*phi_H),0]
         p_s = [k_s,k_s*m.cos(phi_s),k_s*m.sin(phi_s),0.]
         
-        MatEl = sh.calcMatEl(process, p_1, p_2, p_3, p_4, p_s)
         trace = calcTrace(process, p_1, p_2, p_3, p_4, p_s)
-        R_s[K,i] = alpha_s/m.pi*trace/MatEl
-        i = i+1
-        
-    plt.plot(lambda_s, R_s[K], label="N = %i" %(K))    
+        R_s[i,j] = alpha_s/m.pi*trace/MatEl[i,j]
+         
+    plt.plot(lambda_s, R_s[i], label="N = %i" %(N))    
 
 plt.legend(bbox_to_anchor=(1.01, 1), loc='upper left')   
 plt.show()
