@@ -49,7 +49,7 @@ def calcTrace (process, p_1, p_2, p_3, p_4, p_s):
                         [1., (pow(N_C,2)-2)/(2.*N_C)]])
         C_13 = np.array([[(pow(N_C,2)-1)/(2.*N_C), 0.],
                         [0., -1./(2.*N_C)]])
-        C_14 = np.array([[0., (pow(N_C,2)-1)/(4.*pow(N_C,2))],
+        C_14 = -np.array([[0., (pow(N_C,2)-1)/(4.*pow(N_C,2))],
                         [1., -1./N_C]])
         C_34 = C_12
         C_24 = C_13
@@ -60,24 +60,22 @@ def calcTrace (process, p_1, p_2, p_3, p_4, p_s):
     elif process[0] == 2:
         # qq -> qq
         if process[1] == 1:
-            prfct = 0.5 # due to identical particles in final state
             chi_1 = (pow(t,2)+pow(s,2))/pow(u,2)
             chi_2 = N_C*pow(s,2)/(t*u)-chi_1
-            chi_3 = (pow(s,2)+pow(u,2))/pow(t,2)+1/pow(N_C,2)*(pow(s,2)+pow(t,2))/pow(u,2)-2/N_C*pow(s,2)/(t*u)
+            chi_3 = (pow(s,2)+pow(u,2))/pow(t,2)+1./pow(N_C,2)*(pow(s,2)+pow(t,2))/pow(u,2)-2./N_C*pow(s,2)/(t*u)
         
         # qq' -> qq'
         elif process[1] == 2:
-            prfct = 1.0
             chi_1 = 0.
             chi_2 = 0.
             chi_3 = (pow(s,2)+pow(u,2))/pow(t,2)
             
-        H = prfct*np.array([[2.*pow(C_F,2)/pow(N_C, 4)*chi_1, 2.*C_F/pow(N_C, 4)*chi_2],
+        H = np.array([[2.*pow(C_F,2)/pow(N_C, 4)*chi_1, 2.*C_F/pow(N_C, 4)*chi_2],
                     [2.*C_F/pow(N_C, 4)*chi_2, 2./pow(N_C, 2)*chi_3]])
         M = np.array([[pow(N_C,2), 0.],
                     [0., 1./4.*(pow(N_C,2)-1)]])
         
-        C_12 = np.array([[0., (pow(N_C,2)-1)/(4*pow(N_C,2))],[1., -1./N_C]])
+        C_12 = -np.array([[0., (pow(N_C,2)-1)/(4*pow(N_C,2))],[1., -1./N_C]])
         C_13 = np.array([[(pow(N_C,2)-1)/(2.*N_C), 0.],[0., -1./(2.*N_C)]])
         C_14 = np.array([[0., (pow(N_C,2)-1)/(4.*pow(N_C,2))],[1., (pow(N_C,2)-2)/(2.*N_C)]])
         C_34 = C_12
@@ -88,8 +86,8 @@ def calcTrace (process, p_1, p_2, p_3, p_4, p_s):
     # qg -> qg
     elif process[0] == 3:
         chi_1 = -(pow(s,2)+pow(u,2))/(s*u)
-        chi_2 = (1+2*u/t)*chi_1
-        chi_3 = (1-4*s*u/pow(t,2))*chi_1
+        chi_2 = (1.+2.*u/t)*chi_1
+        chi_3 = (1.-4.*s*u/pow(t,2))*chi_1
                     
         H = 1./(2.*N_C*(pow(N_C,2)-1))*np.array([[1./pow(N_C,2)*chi_1, 1./N_C*chi_1, 1./N_C*chi_2],
                 [1./N_C*chi_1, chi_1, chi_2],
@@ -110,10 +108,10 @@ def calcTrace (process, p_1, p_2, p_3, p_4, p_s):
     elif process[0] == 4:
         #qqbar -> gg
         if process[1] == 1:
-            prfct = 1./(4.*pow(N_C,2)) # extra factor of 0.5 for identical final state ptcls
+            prfct = 1./(6.*pow(N_C,2)) # extra factor of 1/3 for identical final state ptcls
             
             C_12 = np.array([[(pow(N_C,2)-1)/(2.*N_C), 0., 0.],[0., -1./(2.*N_C), 0.], [0., 0., -1./(2.*N_C)]])
-            C_13 = np.array([[0., 0., 1./2.],[0., -N_C/4., N_C/4.],[1., (pow(N_C,2)-4)/(4.*N_C), -N_C/4]])
+            C_13 = -np.array([[0., 0., 1./2.],[0., -N_C/4., N_C/4.],[1., (pow(N_C,2)-4)/(4.*N_C), -N_C/4]])
             C_14 = np.array([[0., 0., 1./2.],[0., N_C/4., N_C/4.],[1., (pow(N_C,2)-4)/(4.*N_C), N_C/4.]])
             C_34 = np.array([[N_C, 0., 0.,],[0., N_C/2., 0.],[0., 0., N_C/2.]])
             C_24 = C_13
@@ -125,14 +123,14 @@ def calcTrace (process, p_1, p_2, p_3, p_4, p_s):
             
             C_12 = np.array([[N_C, 0., 0.,],[0., N_C/2., 0.],[0., 0., N_C/2.]])
             C_34 = np.array([[(pow(N_C,2)-1)/(2.*N_C), 0., 0.],[0., -1./(2.*N_C), 0.], [0., 0., -1./(2.*N_C)]])
-            C_13 = np.array([[0., 0., -1./2.],[0., -N_C/4., -N_C/4.],[-1., -(pow(N_C,2)-4)/(4.*N_C), -N_C/4]])
-            C_14 = np.array([[0., 0., 1./2.],[0., -N_C/4., N_C/4.],[1., (pow(N_C,2)-4)/(4.*N_C), -N_C/4.]])
+            C_13 = -np.array([[0., 0., -1./2.],[0., -N_C/4., -N_C/4.],[-1., -(pow(N_C,2)-4)/(4.*N_C), -N_C/4]])
+            C_14 = -np.array([[0., 0., 1./2.],[0., -N_C/4., N_C/4.],[1., (pow(N_C,2)-4)/(4.*N_C), -N_C/4.]])
             C_24 = C_13
             C_23 = C_14
             
         chi_1 = (pow(t,2)+pow(u,2))/(t*u)
-        chi_2 = (1+2*u/s)*chi_1
-        chi_3 = (1-4*t*u/pow(s,2))*chi_1
+        chi_2 = (1.+2.*u/s)*chi_1
+        chi_3 = (1.-4.*t*u/pow(s,2))*chi_1
                     
         H = prfct*np.array([[1./pow(N_C,2)*chi_1, 1./N_C*chi_1, 1./N_C*chi_2],
                 [1./N_C*chi_1, chi_1, chi_2],
@@ -150,7 +148,7 @@ def calcTrace (process, p_1, p_2, p_3, p_4, p_s):
         chi_2 = s*t/pow(u,2)-t*u/pow(s,2)+pow(u,2)/(s*t)-pow(s,2)/(t*u)
         chi_3 = 27./4 - 9.*(s*u/pow(t,2) +1./4.*t*u/pow(s,2)+1./4.*s*t/pow(u,2)) + 9./2.*(pow(u,2)/(s*t)+pow(s,2)/(t*u)-1./2.*pow(t,2)/(s*u))
         
-        H = 0.5*1/16.*np.array([[9.*chi_1, 9./2.*chi_1, 9./2.*chi_2, 0., -3.*chi_1],
+        H = 1./3.*1/16.*np.array([[9.*chi_1, 9./2.*chi_1, 9./2.*chi_2, 0., -3.*chi_1],
             [9./2.*chi_1, 9./4.*chi_1, 9./4.*chi_2, 0., -3./2.*chi_1],
             [9./2.*chi_2, 9./4.*chi_2, chi_3, 0., -3./2.*chi_2],
             [0., 0., 0., 0., 0.],
@@ -170,7 +168,6 @@ def calcTrace (process, p_1, p_2, p_3, p_4, p_s):
             [0, 3./5., 0, 3./2., 9./10.],
             [0, 0, 1./3., 2./3., 2.]
             ])
-        C_12=-C_12
         C_13 = np.array([
             [3., 0, 0, 0, 0],
             [0, 3./2., 0, 0, 0],
@@ -224,7 +221,7 @@ phi_s = m.pi/7.
 process = [5,1]
 E = 7.e3
 K = np.array([0., 1., 2., 3., 4., 5., 6., 7., 8., 9.])
-lambda_s = np.logspace(-3, -1, 10)
+lambda_s = np.logspace(-3, -1, 70)
 R_s = np.zeros((K.size,lambda_s.size))
 
 # calculate Matrix Elements and get title for plot in first variable
