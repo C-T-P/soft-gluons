@@ -4,8 +4,9 @@ import sys
 import math as m
 sys.path.append("/home/preuss10/Compiled/lib/python2.7/site-packages/")
 import Sherpa
+import numpy as np
 
-def calcMatEl (process, p_1, p_2, p_3, p_4, p_s):
+def calcMatEl (process, K, lambda_s, E):
     # Add this to the execution arguments to prevent Sherpa from starting the cross section integration
     sys.argv.append('INIT_ONLY=2')
 
@@ -86,14 +87,32 @@ def calcMatEl (process, p_1, p_2, p_3, p_4, p_s):
         Process.AddOutFlav(21);
         Process.Initialize();
 
-        # Momentum setting via list of floats
-        Process.SetMomenta([p_1,
-                            p_2,
-                            p_3,
-                            p_4,
-                            p_s])
-        MatEl = Process.CSMatrixElement()
-        print '\nSquared ME: ', MatEl
+        # Momentum setting
+        phi_43 = m.pi * 3./2.
+        phi_44 = m.pi * 5./2.
+        phi_H = m.pi/10.
+        phi_s = m.pi/7.
+        MatEl = np.zeros((K.size,lambda_s.size))
+        
+        for i in range(0, K.size):
+            N = K[i]
+            j = 0
+            for l_s in lambda_s:
+                k_s = 2.*E*l_s
+                p_1 = [E,0.,0.,E]
+                p_2 = [E,0.,0.,-E]    
+                p_3 = [E,E*m.cos(phi_43+N*phi_H),E*m.sin(phi_43+N*phi_H),0]
+                p_4 = [E,E*m.cos(phi_44+N*phi_H),E*m.sin(phi_44+N*phi_H),0]
+                p_s = [k_s,k_s*m.cos(phi_s),k_s*m.sin(phi_s),0.]
+                
+                Process.SetMomenta([p_1,
+                                    p_2,
+                                    p_3,
+                                    p_4,
+                                    p_s])
+                MatEl[i,j] = Process.CSMatrixElement()
+                j = j+1
+        
 
     except Sherpa.Exception as exc:
         print exc
