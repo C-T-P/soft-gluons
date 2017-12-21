@@ -1,3 +1,4 @@
+import sys
 import math as m
 import numpy as np
 import matplotlib.pyplot as plt
@@ -221,7 +222,7 @@ phi_s = m.pi/7.
 process = [5,1]
 E = 7.e3
 K = np.array([0., 1., 2., 3., 4., 5., 6., 7., 8., 9.])
-lambda_s = np.logspace(-3, -1, 70)
+lambda_s = np.logspace(-5, -1, 70)
 R_s = np.zeros((K.size,lambda_s.size))
 
 # calculate Matrix Elements and get title for plot in first variable
@@ -248,16 +249,11 @@ for i in range(1, K.size):
         trace = calcTrace(process, p_1, p_2, p_3, p_4, p_s)
         R_s[i,j] = trace/MatEl[i,j]*(4*m.pi*alpha_s)**3
         
-    print R_s[i]
-    
+    #print R_s[i]
     plt.plot(lambda_s, R_s[i], label="N = %i" %(N))    
 
 plt.legend(bbox_to_anchor=(1.01, 1), loc='upper left')   
 plt.show()
-    
-#print "lambda_s\tR_s"
-#for i in range(0, lambda_s.size):
-    #print lambda_s[i], "\t\t", R_s[i]
         
 
 
