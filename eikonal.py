@@ -219,7 +219,7 @@ phi_H = m.pi/10.
 phi_s = m.pi/7.
 
 # Process specification
-process = [5,1]
+process = [4,1]
 E = 7.e3
 K = np.array([0., 1., 2., 3., 4., 5., 6., 7., 8., 9.])
 lambda_s = np.logspace(-5, -1, 70)
@@ -252,8 +252,9 @@ for i in range(1, K.size):
     #print R_s[i]
     plt.plot(lambda_s, R_s[i], label="N = %i" %(N))    
 
-plt.legend(bbox_to_anchor=(1.01, 1), loc='upper left')   
-plt.show()
+plt.legend(bbox_to_anchor=(-0.01, 0), loc='lower left')   
+plt.savefig("R_plot_E-"+str(E)+"_process-"+str(process[0])+str(process[1]), dpi=300, orientation='portrait', papertype = 'a4', format='pdf', transparent=False, frameon=True)
+#plt.show()
         
 
 
