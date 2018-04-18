@@ -219,17 +219,17 @@ phi_H = m.pi/10.
 phi_s = m.pi/7.
 
 # Process specification
-process = [4,1]
+process = [1,1]
 E = 7.e3
 K = np.array([0., 1., 2., 3., 4., 5., 6., 7., 8., 9.])
-lambda_s = np.logspace(-5, -1, 70)
+lambda_s = np.logspace(-2, -1, 70)
 R_s = np.zeros((K.size,lambda_s.size))
 
 # calculate Matrix Elements and get title for plot in first variable
 plot_title, MatEl = sh.calcMatEl(process, K, lambda_s, E)
 
 # Plot setup
-plt.title(plot_title + '$\mathrm{~at~} E = %.1f \mathrm{~GeV}$' %(E))
+plt.title(plot_title + '$\mathrm{~at~} E_{\mathrm{Beam}} = %.1f \mathrm{~GeV}$' %(E))
 plt.xlabel('$\lambda_s$')
 plt.ylabel('$R_s$')
 plt.xscale('log') 
