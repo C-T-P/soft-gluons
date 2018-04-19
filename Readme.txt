@@ -1,14 +1,13 @@
 PACKAGE CONTENTS
-Soft-Gluons is a project to compute the eikonal contribution of soft gluon radiation in (up to now) 2 -> 3 parton scattering. To validate the result, the ratio R_s of the eikonal contribution divided by the actual matrix element (taken from Sherpa) is calculated.
+Soft-Gluons is a Python plugin to the MC Event Generator Sherpa to validate the eikonal contribution of soft gluon radiation in 2 -> 2 parton scattering. The ratio R_s of the eikonal contribution divided by the actual matrix element (taken from Sherpa) is calculated.
 
-To this date, Soft-Gluons contains the following files:
+Soft-Gluons contains the following files:
 > interface.py
 > eikonal.py
-> eikonal.c
 
 USAGE
-The 'interface.py' is an altered version of the Sherpa Python interface contained in the Sherpa package (sherpa.hepforge.org) which is used to compute the colour summed, squared matrix element of a given process.
-There are currently two codes to compute the eikonal contribution of soft gluon radiation: 'eikonal.py' and 'eikonal.c'. While 'eikonal.c' isn't interfaced to Sherpa yet, the python one is. Both codes use given hard and soft anomalous dimension matrices to compute the eikonal contribution.
+The 'interface.py' accesses the Sherpa Python interface contained in the Sherpa package (sherpa.hepforge.org) which is used to compute the colour summed, squared matrix element of a given process.
+The file 'eikonal.py' use given hard and soft anomalous dimension matrices to compute the eikonal contribution.
 
 Usage of eikonal.py:
 In 'eikonal.py', two functions are defined. The function 'writeRunCard' saves a file 'Run.dat' that is needed by Sherpa and further defines the process and configurations. Its arguments are the process identifiers (see below) and the centre of mass frame energy of one parton beam, where a symmetric collides is considered. 
@@ -31,7 +30,7 @@ process id      subprocess id       parton process
 As it can be seen from the table, the process ids group similar processes and the subprocess ids are used to distinguish minor differences among them. The subprocess ids which are 'not needed' may just be set to 1 or any other integer value.
 
 INSTALLATION
-To work properly, Sherpa needs to be set up with '--enable-pyext' in the ./configure prompt and the files 'eikonal.py' and 'interface.py' need to be placed in the ME2-Python folder created by Sherpa: /path-to-sherpa/share/SHERPA-MC/Examples/API/ME2-Python/, where 'path-to-sherpa denotes the path to which Sherpa was installed.
+To work properly, Sherpa needs to be set up with '--enable-pyext' in the ./configure prompt.
 
 AUTHORS
 Jose Llanes Jurado, Christian Tobias Preuss
