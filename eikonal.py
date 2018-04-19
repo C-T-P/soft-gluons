@@ -12,11 +12,13 @@ def minkprod(a, b):
     return np.matmul(a, np.matmul(metric, b));
 
 def calcTrace (process, p_1, p_2, p_3, p_4, p_s):
+
     N_C = 3.
     C_F = 4./3.
     C_A = 3.
     hard_p = np.array([p_1, p_2, p_3, p_4])
     
+
     s = minkprod(np.add(p_1, p_2), np.add(p_1, p_2))
     t = minkprod(np.subtract(p_1, p_3), np.subtract(p_1, p_3))
     u = minkprod(np.subtract(p_1, p_4), np.subtract(p_1, p_4))
@@ -255,9 +257,3 @@ for i in range(1, K.size):
 plt.legend(bbox_to_anchor=(-0.01, 0), loc='lower left')   
 plt.savefig("R_plot_E-"+str(E)+"_process-"+str(process[0])+str(process[1]), dpi=300, orientation='portrait', papertype = 'a4', format='pdf', transparent=False, frameon=True)
 #plt.show()
-        
-
-
-
-    
-    
