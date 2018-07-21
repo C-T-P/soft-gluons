@@ -1,5 +1,5 @@
 PACKAGE CONTENTS
-Soft-Gluons is a Python plugin to the MC Event Generator Sherpa to validate the eikonal contribution of soft gluon radiation in 2 -> 2 parton scattering. The ratio R_s of the eikonal contribution divided by the actual matrix element (taken from Sherpa) is calculated.
+Soft-Gluons is a Python plugin to the MC Event Generator Sherpa to validate the eikonal contribution of soft gluon radiation in 2 -> 2 parton scattering in the multiplet basis. The ratio R_s of the eikonal contribution divided by the actual matrix element (taken from Sherpa) is calculated.
 
 Soft-Gluons contains the following files:
 > interface.py
